@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Korisnik\\Desktop\\faks prez\\sistemsko\\sistemskoP3\\sistemskoP3.csproj": {}
+    "C:\\Users\\Korisnik\\Desktop\\sistemskoP3\\SistemskoP3\\sistemskoP3.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Korisnik\\Desktop\\faks prez\\sistemsko\\sistemskoP3\\sistemskoP3.csproj": {
+    "C:\\Users\\Korisnik\\Desktop\\sistemskoP3\\SistemskoP3\\sistemskoP3.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Korisnik\\Desktop\\faks prez\\sistemsko\\sistemskoP3\\sistemskoP3.csproj",
+        "projectUniqueName": "C:\\Users\\Korisnik\\Desktop\\sistemskoP3\\SistemskoP3\\sistemskoP3.csproj",
         "projectName": "sistemskoP3",
-        "projectPath": "C:\\Users\\Korisnik\\Desktop\\faks prez\\sistemsko\\sistemskoP3\\sistemskoP3.csproj",
+        "projectPath": "C:\\Users\\Korisnik\\Desktop\\sistemskoP3\\SistemskoP3\\sistemskoP3.csproj",
         "packagesPath": "C:\\Users\\Korisnik\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Korisnik\\Desktop\\faks prez\\sistemsko\\sistemskoP3\\obj\\",
+        "outputPath": "C:\\Users\\Korisnik\\Desktop\\sistemskoP3\\SistemskoP3\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Korisnik\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -44,6 +44,10 @@
               "target": "Package",
               "version": "[13.0.3, )"
             },
+            "OpenNLP": {
+              "target": "Package",
+              "version": "[1.3.5, )"
+            },
             "SharpEntropy": {
               "target": "Package",
               "version": "[1.0.0, )"
@@ -51,6 +55,10 @@
             "System.Reactive": {
               "target": "Package",
               "version": "[6.0.0, )"
+            },
+            "Yelp.Api": {
+              "target": "Package",
+              "version": "[1.3.0, )"
             }
           },
           "imports": [

@@ -9,8 +9,10 @@
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="OpenNLP" Version="1.3.5" />
     <PackageReference Include="SharpEntropy" Version="1.0.0" />
     <PackageReference Include="System.Reactive" Version="6.0.0" />
+    <PackageReference Include="Yelp.Api" Version="1.3.0" />
   </ItemGroup>
 
 </Project>

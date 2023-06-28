@@ -20,6 +20,15 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SharpEntropy;
+using Yelp.Api;
+using Yelp.Api.Models;
+using OpenNLP.Tools.Util;
+using OpenNLP.Tools.SentenceDetect;
+using OpenNLP.Tools.Tokenize;
+using OpenNLP;
+//using SharpEntropy.IO;
+using System.Diagnostics.Eventing.Reader;
+
 
 public class Gym
 {
@@ -40,7 +49,7 @@ public class GymStream : IObservable<Gym>
     {
         gymSubject = new Subject<Gym>();
     }
-    public void GetGyms(int price)
+    public async Task GetGyms(int price)
     {
         string apiKey = "N_97QUgL7k9LRspAVMwPHKHH3gSOfg5usV-IYTOTVtdQEK2mwKEAalxnFj6dAfYdq6r74jvhN4c86EuezprGmmfKduOyV1GBXl5btQnsxqAbF8Mb-oO_TtHfQlObZHYx";
         HttpClient client = new HttpClient();
@@ -67,7 +76,7 @@ public class GymStream : IObservable<Gym>
                     JObject reviewJsonResponse = JObject.Parse(reviewContent);
                     JArray reviews = (JArray)reviewJsonResponse["reviews"]!;
                     //Console.WriteLine("komentari: " + reviews);
-                    List<string> komentari = new List<string>();
+                    /*List<string> komentari = new List<string>();
                     foreach (var r in reviews)
                     {
 
@@ -80,7 +89,52 @@ public class GymStream : IObservable<Gym>
 
                     
                 }
+                gymSubject.OnCompleted();*/
+                    List<string> komentari = new List<string>();
+                    foreach (var r in reviews)
+                    {
+                        var text = r["text"]!.ToString();
+                        komentari.Add(text);
+                        Console.WriteLine(text);
+                    }
+
+                    // Perform topic modeling
+                    
+                    if (komentari.Count > 0)
+                    {
+                        var trainer = new GisTrainer();
+
+                        // Create a training event reader
+                        var trainingData = new SharpEntropy.TrainingEvent[komentari.Count];
+                        //var komarray = komentari.ToArray();
+                        for (int i = 0; i < komentari.Count; i++)
+                        {
+                            string[] niz = komentari[i].Split(' ');
+                            trainingData[i] = new SharpEntropy.TrainingEvent("topic", niz);
+                        }
+                        var reader = new TrainingEventReader(trainingData);
+
+
+                        // Train the model
+                        var model = trainer.TrainModel(reader);
+
+                        // Get the topics for the comments
+                        var topics = model.GetBestOutcomeLabels(komentari.ToArray());
+
+                        // Print the topics
+                        Console.WriteLine("Topics:");
+                        for (int i = 0; i < komentari.Count; i++)
+                        {
+                            Console.WriteLine($"{komentari[i]} - {topics[i]}");
+                        }
+                    }
+                    Console.WriteLine("");
+                }
+
                 gymSubject.OnCompleted();
+
+
+
             }
             catch (Exception ex)
             {
@@ -88,8 +142,72 @@ public class GymStream : IObservable<Gym>
             }
         });
     }
-    
+    /*
+    List<string> topics = PerformTopicModeling(komentari);
+    Console.WriteLine($"Topics: {string.Join(", ", topics)}");
 
+    Console.WriteLine("");
+}
+
+gymSubject.OnCompleted();
+
+
+
+}
+catch (Exception ex)
+{
+gymSubject.OnError(ex);
+}
+});
+}
+
+private List<string> PerformTopicModeling(List<string> comments)
+{
+List<string> topics = new List<string>();
+
+// Sentence detection
+EnglishMaximumEntropySentenceDetector sentenceDetector = new EnglishMaximumEntropySentenceDetector(""); //nzm da li je dobro da se prosledi ""
+List<string[]> sentences = new List<string[]>();
+foreach (var comment in comments)
+{
+string[] sentenceTokens = sentenceDetector.SentenceDetect(comment);
+sentences.Add(sentenceTokens);
+}
+
+// Tokenization
+EnglishMaximumEntropyTokenizer tokenizer = new EnglishMaximumEntropyTokenizer("");
+List<string[]> tokens = new List<string[]>();
+foreach (var sentence in sentences)
+{
+string[] sentenceTokens = sentence;
+for (int i = 0; i < sentenceTokens.Length; i++)
+{
+sentenceTokens[i] = tokenizer.Tokenize(sentenceTokens[i]);
+}
+tokens.Add(sentenceTokens);
+}
+
+// Topic modeling
+EventStream eventStream = new BasicEventStream(tokens);
+ITrainingDataReader reader = new PlainTextByLineDataReader(eventStream);
+ITrainingData trainingData = new BasicTrainingData(reader);
+IMaxentModel model = new SharpEntropy.GisModel(new SharpEntropy.IO.BinaryGisModelReader("EnglishSD.nbin"));
+IMaxentTagger tagger = new MaxentTagger(model);
+
+foreach (var sentenceTokens in tokens)
+{
+string[] tags = tagger.Tag(sentenceTokens);
+for (int i = 0; i < tags.Length; i++)
+{
+if (tags[i] == "NN") // Noun tags
+{
+    topics.Add(sentenceTokens[i]);
+}
+}
+}
+return topics;
+}
+    */
     public IDisposable Subscribe(IObserver<Gym> observer)
     {
         return gymSubject.Subscribe(observer);
