@@ -8,6 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Maroontress.CuiMallet" Version="1.0.0" />
+    <PackageReference Include="Microsoft.ML" Version="2.0.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="OpenNLP" Version="1.3.5" />
     <PackageReference Include="SharpEntropy" Version="1.0.0" />
